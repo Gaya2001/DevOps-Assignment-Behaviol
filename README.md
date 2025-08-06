@@ -7,117 +7,125 @@
 
 <h1>Java Spring Boot REST API on GKE with TLS and Monitoring</h1>
 
-<h2>1. Objective</h2>
-<p>This project demonstrates the deployment of a containerized Java Spring Boot API to Google Kubernetes Engine (GKE), with secure HTTPS access via NGINX Ingress and Let's Encrypt TLS certificates, and monitoring using Prometheus and Grafana.</p>
+<h2>Project Structure</h2>
+<p>The <code>k8s/</code> folder contains all Kubernetes manifests:</p>
+<ul>
+  <li>01-namespace.yaml</li>
+  <li>02-configmap.yaml</li>
+  <li>03-deployment.yaml</li>
+  <li>04-secret.yaml</li>
+  <li>05-service.yaml</li>
+  <li>06-hpa.yaml</li>
+  <li>07-ingress.yaml</li>
+  <li>08-certificate.yaml</li>
+  <li>cluster-issuer.yaml</li>
+</ul>
 
-<h2>2. Containerization</h2>
+<h2>1. Containerization</h2>
 <ul>
   <li>Java Spring Boot REST API</li>
-  <li>Dockerfile created for the application</li>
-  <li>Image built and pushed to Google Artifact Registry</li>
-  <li>Example image URL: <code>us-central1-docker.pkg.dev/betbazar-ops/java-api-repo-kavindu/springboot-restapi-kavindu</code></li>
+  <li>Packaged into a Docker image</li>
+  <li>Pushed to Google Artifact Registry</li>
+  <li>Example image: <code>us-central1-docker.pkg.dev/betbazar-ops/java-api-repo-kavindu/springboot-restapi-kavindu</code></li>
 </ul>
 
-<h2>3. Kubernetes Setup</h2>
-<ul>
-  <li>Namespace used: <code>nginx-private</code></li>
-  <li>Deployment and service applied using kubectl</li>
-</ul>
-
-<h2>4. Ingress Configuration</h2>
-<ul>
-  <li>Installed Bitnami NGINX Ingress Controller via Helm</li>
-  <li>Custom IngressClass: <code>nginx-private</code></li>
-  <li>Ingress configured to route traffic from <code>www.kavinducloudops.tech</code> to the Java API</li>
-</ul>
-
+<h2>2. Namespace</h2>
 <pre>
-kubectl apply -f 08-ingress.yaml -n nginx-private
+kubectl apply -f k8s/01-namespace.yaml
 </pre>
 
-<h2>5. TLS via cert-manager</h2>
-<ul>
-  <li>cert-manager installed using official YAML</li>
-  <li>ClusterIssuer created for Let's Encrypt (staging)</li>
-  <li>Certificate resource created to issue TLS cert</li>
-  <li>TLS secret: <code>java-api-tls-secret</code></li>
-</ul>
-
-<h3>ClusterIssuer Example:</h3>
+<h2>3. ConfigMap</h2>
 <pre>
-apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
-metadata:
-  name: letsencrypt-staging
-spec:
-  acme:
-    email: kavigayashan149@gmail.com
-    server: https://acme-staging-v02.api.letsencrypt.org/directory
-    privateKeySecretRef:
-      name: letsencrypt-staging
-    solvers:
-      - http01:
-          ingress:
-            class: nginx-private
+kubectl apply -f k8s/02-configmap.yaml
 </pre>
 
-<h3>Certificate Example:</h3>
+<h2>4. Secret</h2>
 <pre>
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: my-tls
-  namespace: nginx-private
-spec:
-  secretName: java-api-tls-secret
-  issuerRef:
-    name: letsencrypt-staging
-    kind: ClusterIssuer
-  commonName: www.kavinducloudops.tech
-  dnsNames:
-    - www.kavinducloudops.tech
+kubectl apply -f k8s/04-secret.yaml
 </pre>
 
-<h2>6. DNS Configuration</h2>
-<ul>
-  <li>Domain used: <code>www.kavinducloudops.tech</code></li>
-  <li>A record pointed to the LoadBalancer IP of the Ingress</li>
-  <li>Final IP: <code>35.224.125.190</code></li>
-</ul>
+<h2>5. Deployment</h2>
+<pre>
+kubectl apply -f k8s/03-deployment.yaml
+</pre>
 
-<h2>7. Monitoring with Prometheus and Grafana</h2>
-<ul>
-  <li>Installed kube-prometheus-stack via Helm</li>
-  <li>Namespace: <code>monitoring</code></li>
-  <li>Grafana accessed via port-forwarding on port 3000</li>
-  <li>Default login: admin / decoded password from secret</li>
-</ul>
+<h2>6. Service</h2>
+<pre>
+kubectl apply -f k8s/05-service.yaml
+</pre>
 
+<h2>7. Horizontal Pod Autoscaler (HPA)</h2>
+<pre>
+kubectl apply -f k8s/06-hpa.yaml
+</pre>
+
+<h2>8. NGINX Ingress Controller</h2>
+<p>Installed via Helm:</p>
+<pre>
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+helm install nginx-private bitnami/nginx-ingress-controller \
+  --namespace nginx-private \
+  --create-namespace \
+  --set ingressClassResource.name=nginx-private \
+  --set controller.ingressClass=nginx-private \
+  --set ingressClassResource.enabled=true \
+  --set ingressClassResource.default=false
+</pre>
+
+<h2>9. TLS Setup</h2>
+
+<h3>Install cert-manager</h3>
+<pre>
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/latest/download/cert-manager.yaml
+</pre>
+
+<h3>ClusterIssuer</h3>
+<pre>
+kubectl apply -f k8s/cluster-issuer.yaml
+</pre>
+
+<h3>Certificate</h3>
+<pre>
+kubectl apply -f k8s/08-certificate.yaml
+</pre>
+
+<h2>10. Ingress Resource</h2>
+<p>Configured for HTTPS using TLS certificate:</p>
+<pre>
+kubectl apply -f k8s/07-ingress.yaml
+</pre>
+
+<h2>11. Monitoring (Prometheus + Grafana)</h2>
+<pre>
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack \
+  --namespace monitoring --create-namespace
+</pre>
+
+<h3>Access Grafana</h3>
 <pre>
 kubectl port-forward svc/kube-prometheus-stack-grafana 3000:80 -n monitoring
 </pre>
+<p>Login to <code>http://localhost:3000</code> with admin credentials.</p>
 
-<h2>8. Verification</h2>
+<h2>12. Domain and DNS</h2>
 <ul>
-  <li>Check Ingress IP: <code>kubectl get ingress -n nginx-private</code></li>
-  <li>Check TLS secret: <code>kubectl get secret java-api-tls-secret -n nginx-private</code></li>
-  <li>Check cert status: <code>kubectl describe certificate my-tls -n nginx-private</code></li>
-  <li>Open: <a href="https://www.kavinducloudops.tech">https://www.kavinducloudops.tech</a></li>
+  <li>Custom domain: <code>www.kavinducloudops.tech</code></li>
+  <li>A record points to Ingress external IP: <code>35.224.125.190</code></li>
 </ul>
 
-<h2>9. Tools Used</h2>
+<h2>13. Final Validation</h2>
 <ul>
-  <li>Google Kubernetes Engine (GKE)</li>
-  <li>Docker</li>
-  <li>Helm</li>
-  <li>Bitnami charts</li>
-  <li>cert-manager</li>
-  <li>Prometheus</li>
-  <li>Grafana</li>
+  <li><code>kubectl get ingress -n nginx-private</code> - shows ingress IP</li>
+  <li><code>kubectl get certificate -n nginx-private</code> - cert status</li>
+  <li><code>kubectl get secret java-api-tls-secret -n nginx-private</code></li>
+  <li>Visit: <a href="https://www.kavinducloudops.tech">https://www.kavinducloudops.tech</a></li>
 </ul>
 
-<h2>10. Conclusion</h2>
-<p>The application is now securely exposed over HTTPS with a trusted TLS certificate, monitored with Prometheus and Grafana, and accessible via a custom domain using NGINX Ingress on GKE.</p>
+<h2>14. Summary</h2>
+<p>This setup delivers a fully containerized, auto-scaled, TLS-secured Java API with observability — deployed on GKE using Kubernetes and Helm.</p>
 
 </body>
 </html>
