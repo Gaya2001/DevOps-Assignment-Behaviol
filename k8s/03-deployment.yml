@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: java-api-deployment
+  namespace: java-api-kavindu
+  labels:
+    app: java-api-kavindu
+    version: v1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: java-api-kavindu
+  template:
+    metadata:
+      labels:
+        app: java-api-kavindu
+        version: v1
+    spec:
+      containers:
+        - name: java-springboot-api-kavindu
+          image: us-central1-docker.pkg.dev/betbazar-ops/java-api-repo-kavindu/springboot-restapi-kavindu:latest
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "production"
+
+

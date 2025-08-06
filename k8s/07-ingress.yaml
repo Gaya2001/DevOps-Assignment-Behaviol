@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: java-api-ingress
+  namespace: java-api-kavindu
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+spec:
+  ingressClassName: nginx-private
+  tls:
+    - hosts:
+        - www.kavinducloudops.tech
+      secretName: java-api-tls-secret
+  rules:
+    - host: www.kavinducloudops.tech
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: java-api-service
+                port:
+                  number: 8080
+
+
+
