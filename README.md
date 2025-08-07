@@ -82,7 +82,27 @@ bash setup-script.sh
 
 ### 4. Monitor Your Deployment
 ```bash
+# Check status of all components
+bash monitoring-script.sh
 ```
+
+## 📸 Screenshots & Demo
+
+### 🎯 API Response Demo
+![API Response](screenshots/Output.png)
+*Example API response showing user data retrieval*
+
+### 📊 Grafana Dashboard
+![Grafana Dashboard](screenshots/Grafana.png)
+*Real-time monitoring dashboard showing application metrics*
+
+### ☸️ Kubernetes Dashboard
+![Kubernetes Pods](screenshots/Pod_Status_java-api-kavindu.png)
+*Kubernetes pods running in production environment*
+
+### 🔒 TLS Certificate Status
+![TLS Certificate](screenshots/TLS certificate.png)
+*Let's Encrypt certificate validation and HTTPS status*
 
 ## 🌐 Access Points
 
@@ -358,11 +378,44 @@ kubectl describe certificate -n java-api-kavindu
 
 ## 🚀 Current Status
 
+### 📈 Live System Metrics
+![System Status](screenshots/system-status.png)
+
 **Deployment**: ✅ **SUCCESSFUL**  
 **API Status**: ✅ **RUNNING** (HTTP 200)  
 **External Access**: ✅ **AVAILABLE** at `http://35.226.27.171:8080`  
 **Auto-scaling**: ✅ **ACTIVE** (2/2 pods ready)  
 **TLS Certificate**: 🔄 **PROVISIONING** (Let's Encrypt validation in progress)  
+
+### 🎬 Demo Videos & Screenshots
+
+<details>
+<summary>📊 Click to view Monitoring Dashboard Screenshots</summary>
+
+#### Prometheus Metrics
+![Prometheus Dashboard](screenshots/prometheus-dashboard.png)
+
+#### Grafana Visualization
+![Grafana Metrics](screenshots/grafana-metrics.png)
+
+#### Kubernetes Resource Status
+![K8s Resources](screenshots/k8s-resources.png)
+
+</details>
+
+<details>
+<summary>🌐 Click to view API Testing Screenshots</summary>
+
+#### GET /api/users Response
+![API GET Response](screenshots/api-get-users.png)
+
+#### Health Check Response
+![Health Check](screenshots/health-check.png)
+
+#### HTTPS Domain Access
+![HTTPS Access](screenshots/https-domain.png)
+
+</details>  
 
 ---
 
