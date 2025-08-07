@@ -286,10 +286,6 @@ To use your custom domain:
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/api/users` | Get all users |
-| GET | `/api/users/{id}` | Get user by ID |
-| POST | `/api/users` | Create new user |
-| PUT | `/api/users/{id}` | Update user |
-| DELETE | `/api/users/{id}` | Delete user |
 
 ### Health & Monitoring
 | Method | Endpoint | Description |
@@ -303,22 +299,7 @@ To use your custom domain:
 # Get all users
 curl -X GET http://35.226.27.171:8080/api/users
 
-# Create a new user
-curl -X POST http://35.226.27.171:8080/api/users \
-  -H "Content-Type: application/json" \
-  -d '{"name":"John Doe","email":"john@example.com"}'
 
-# Get user by ID
-curl -X GET http://35.226.27.171:8080/api/users/1
-
-# Update user
-curl -X PUT http://35.226.27.171:8080/api/users/1 \
-  -H "Content-Type: application/json" \
-  -d '{"name":"John Smith","email":"johnsmith@example.com"}'
-
-# Delete user
-curl -X DELETE http://35.226.27.171:8080/api/users/1
-```
 
 ## � Cost Optimization
 
