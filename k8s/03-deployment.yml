@@ -26,5 +26,34 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "production"
+          envFrom:
+            - secretRef:
+                name: java-api-secret
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /api/users
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /api/users
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 5
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/config
+      volumes:
+        - name: config-volume
+          configMap:
+            name: java-api-config
 
 
