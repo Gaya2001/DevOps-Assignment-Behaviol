@@ -97,7 +97,7 @@ bash monitoring-script.sh
 *Real-time monitoring dashboard showing application metrics*
 
 ### ☸️ Kubernetes Dashboard
-![Kubernetes Pods](screenshots/Pod_Status_java-api-kavindu.png)
+![Kubernetes Pods](<img width="1156" height="105" alt="Image" src="https://github.com/user-attachments/assets/05eccd2b-5a5f-49c6-83c8-d1d929a5cbf7" />)
 *Kubernetes pods running in production environment*
 
 ### 🔒 TLS Certificate Status
