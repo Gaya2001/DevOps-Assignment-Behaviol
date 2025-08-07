@@ -86,24 +86,6 @@ bash setup-script.sh
 bash monitoring-script.sh
 ```
 
-## 📸 Screenshots & Demo
-
-### 🎯 API Response Demo
-![API Response](screenshots/Output.png)
-*Example API response showing user data retrieval*
-
-### 📊 Grafana Dashboard
-![Grafana Dashboard](screenshots/Grafana.png)
-*Real-time monitoring dashboard showing application metrics*
-
-### ☸️ Kubernetes Dashboard
-![Kubernetes Pods](screenshots/Pod_Status_java-api-kavindu.png)
-*Kubernetes pods running in production environment*
-
-### 🔒 TLS Certificate Status
-![TLS Certificate](screenshots/TLS certificate.png)
-*Let's Encrypt certificate validation and HTTPS status*
-
 ## 🌐 Access Points
 
 After deployment, your application will be accessible via:
@@ -153,7 +135,8 @@ DevOps-Assignment-Behaviol/
 ├── setup-script.sh                           # Automated deployment script
 ├── monitoring-script.sh                      # Health check script
 ├── cleanup-script.sh                         # Resource cleanup script
-└── README.md                                 # This file
+├── README.md                                 # This file
+└── README.html                               # HTML version of documentation
 ```
 
 ## 🔧 Configuration Details
@@ -300,13 +283,42 @@ To use your custom domain:
 ## 📝 API Endpoints
 
 ### User Management API
-- **GET** `/api/users` - Get all users
-
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/users` | Get all users |
+| GET | `/api/users/{id}` | Get user by ID |
+| POST | `/api/users` | Create new user |
+| PUT | `/api/users/{id}` | Update user |
+| DELETE | `/api/users/{id}` | Delete user |
 
 ### Health & Monitoring
-- **GET** `/actuator/health` - Application health status
-- **GET** `/actuator/prometheus` - Prometheus metrics
-- **GET** `/actuator/info` - Application information
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/actuator/health` | Application health status |
+| GET | `/actuator/prometheus` | Prometheus metrics |
+| GET | `/actuator/info` | Application information |
+
+### Example API Usage
+```bash
+# Get all users
+curl -X GET http://35.226.27.171:8080/api/users
+
+# Create a new user
+curl -X POST http://35.226.27.171:8080/api/users \
+  -H "Content-Type: application/json" \
+  -d '{"name":"John Doe","email":"john@example.com"}'
+
+# Get user by ID
+curl -X GET http://35.226.27.171:8080/api/users/1
+
+# Update user
+curl -X PUT http://35.226.27.171:8080/api/users/1 \
+  -H "Content-Type: application/json" \
+  -d '{"name":"John Smith","email":"johnsmith@example.com"}'
+
+# Delete user
+curl -X DELETE http://35.226.27.171:8080/api/users/1
+```
 
 ## � Cost Optimization
 
@@ -378,44 +390,45 @@ kubectl describe certificate -n java-api-kavindu
 
 ## 🚀 Current Status
 
-### 📈 Live System Metrics
-![System Status](screenshots/system-status.png)
-
 **Deployment**: ✅ **SUCCESSFUL**  
 **API Status**: ✅ **RUNNING** (HTTP 200)  
 **External Access**: ✅ **AVAILABLE** at `http://35.226.27.171:8080`  
 **Auto-scaling**: ✅ **ACTIVE** (2/2 pods ready)  
 **TLS Certificate**: 🔄 **PROVISIONING** (Let's Encrypt validation in progress)  
 
-### 🎬 Demo Videos & Screenshots
+### � Live Demo & Testing
 
-<details>
-<summary>📊 Click to view Monitoring Dashboard Screenshots</summary>
+#### API Endpoints Testing
+```bash
+# Test the main API endpoint
+curl http://35.226.27.171:8080/api/users
 
-#### Prometheus Metrics
-![Prometheus Dashboard](screenshots/prometheus-dashboard.png)
+# Check application health
+curl http://35.226.27.171:8080/actuator/health
 
-#### Grafana Visualization
-![Grafana Metrics](screenshots/grafana-metrics.png)
+# Test HTTPS domain access
+curl https://www.kavinducloudops.tech/api/users
+```
 
-#### Kubernetes Resource Status
-![K8s Resources](screenshots/k8s-resources.png)
+#### Monitoring Access
+- **Prometheus Metrics**: http://34.30.81.46:9090
+- **Grafana Dashboard**: http://34.71.216.190:3000 (admin/admin123)
+- **Application Metrics**: http://35.226.27.171:8080/actuator/prometheus
 
-</details>
+#### Kubernetes Status Check
+```bash
+# Check pod status
+kubectl get pods -n java-api-kavindu
 
-<details>
-<summary>🌐 Click to view API Testing Screenshots</summary>
+# Check HPA status
+kubectl get hpa -n java-api-kavindu
 
-#### GET /api/users Response
-![API GET Response](screenshots/api-get-users.png)
+# Check service status
+kubectl get svc -n java-api-kavindu
 
-#### Health Check Response
-![Health Check](screenshots/health-check.png)
-
-#### HTTPS Domain Access
-![HTTPS Access](screenshots/https-domain.png)
-
-</details>  
+# Check ingress status
+kubectl get ingress -n java-api-kavindu
+```  
 
 ---
 
