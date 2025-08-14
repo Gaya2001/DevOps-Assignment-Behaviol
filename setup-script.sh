@@ -3,6 +3,9 @@
 # Complete DevOps Assignment Setup Script
 # Run this after creating your GKE cluster
 
+# Ensure kubectl is in PATH for bash
+export PATH=$PATH:/usr/local/bin:/c/Program\ Files/Google/Cloud\ SDK/google-cloud-sdk/bin
+
 echo "🚀 Starting DevOps Assignment Setup..."
 
 # 1. Add Helm repositories
