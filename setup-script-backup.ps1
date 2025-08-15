@@ -179,4 +179,4 @@ Write-Host "💡 To connect Grafana to Prometheus:" -ForegroundColor Cyan
 Write-Host "   1. Login to Grafana" -ForegroundColor White
 Write-Host "   2. Add Prometheus data source with URL: http://prometheus-server.monitoring.svc.cluster.local" -ForegroundColor White
 Write-Host ""
-Write-Host "WARNING: Configure DNS to point your domain to the ingress IP for HTTPS access" -ForegroundColor Yellow
+Write-Host "⚠️  Note: Configure DNS to point your domain to the ingress IP for HTTPS access" -ForegroundColor Yellow

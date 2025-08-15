@@ -4,15 +4,15 @@ metadata:
   name: java-api-ingress
   namespace: java-api-kavindu
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - www.kavinducloudops.tech
-      secretName: java-api-tls-secret
+        - api.kavinducloudops.tech
+      secretName: java-api-tls-secret-new
   rules:
-    - host: www.kavinducloudops.tech
+    - host: api.kavinducloudops.tech
       http:
         paths:
           - path: /
